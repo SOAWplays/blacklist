@@ -42,10 +42,8 @@
 
         if(typeof chrome != 'undefined') {
             chrome.runtime.sendMessage('aafgnkhgmjhodeebloogjbcijlgfnanp', { message: 'ping' }, function (reply) {
-                if (reply) {
-                    if (reply.pong) {
-                        document.getElementById('crx').remove();
-                    }
+                if (reply.message == 'pong') {
+                    document.getElementById('crx').remove();
                 }
             });
         }
