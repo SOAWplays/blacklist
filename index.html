@@ -42,11 +42,18 @@
 
         if(typeof chrome !== 'undefined') {
             chrome.runtime.sendMessage('aafgnkhgmjhodeebloogjbcijlgfnanp', { message: 'ping' }, function (reply) {
-                if(typeof reply === 'undefined') return;
-                if (reply.message == 'pong') {
-                    document.getElementById('crx').remove();
+                if(reply) {
+                    if(reply.message) {
+                        if(reply.message == 'pong') {
+                            removeButton('crx');
+                        }
+                    }
                 }
             });
+        }
+
+        function removeButton(id) {
+            document.getElementById(id).remove();
         }
 
         // Maybe some Firefox code can go here ;)
