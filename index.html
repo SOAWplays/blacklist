@@ -20,7 +20,7 @@
             <h1>The Blacklist</h1>
             <h3>A collection of plugins and spigot users we could do without.</h3>
 
-            What you are seeing is a basic landing page, because there's not really anything fancy I can put here enjoy staring at these buttons instead.
+            Enjoy staring at these buttons. Couldn't think of what to put here.
 
             <hr>
             <div class="text-center">
@@ -40,13 +40,15 @@
             this.parentElement.removeChild(this);
         }
 
-        if(typeof chrome != 'undefined') {
+        if(typeof chrome !== 'undefined') {
             chrome.runtime.sendMessage('aafgnkhgmjhodeebloogjbcijlgfnanp', { message: 'ping' }, function (reply) {
                 if (reply.message == 'pong') {
                     document.getElementById('crx').remove();
                 }
             });
         }
+
+        // Maybe some Firefox code can go here ;)
     </script>
 </body>
 </html>
