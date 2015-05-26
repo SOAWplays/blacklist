@@ -42,6 +42,7 @@
 
         if(typeof chrome !== 'undefined') {
             chrome.runtime.sendMessage('aafgnkhgmjhodeebloogjbcijlgfnanp', { message: 'ping' }, function (reply) {
+                if(typeof reply === 'undefined') return;
                 if (reply.message == 'pong') {
                     document.getElementById('crx').remove();
                 }
