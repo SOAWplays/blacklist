@@ -5,7 +5,7 @@
   "short_name": "Blacklist",
   "description": "Makes reporting users and plugins easier than ever.",
   "author": "Fireflies",
-  "version": "1.1",
+  "version": "1.2",
 
   "homepage_url": "http://albionco.de/blacklist",
   "offline_enabled": false,
