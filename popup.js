@@ -50,6 +50,7 @@ function checkProfile(url, callback, error) {
     };
     req.send();
 }
+
 document.addEventListener('DOMContentLoaded', function() {
     getCurrentTabUrl(function(url) {
         if(url.indexOf('www.spigotmc.org/members/') == -1) {
@@ -68,4 +69,13 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+});
+
+chrome.runtime.onMessageExternal.addListener(function(request, sender, sendResponse) {
+    if (request.message == 'ping') {
+        sendResponse({ 
+            message: 'pong'
+        });
+    }
+    return true;
 });

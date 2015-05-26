@@ -17,6 +17,12 @@
   "permissions": [
     "activeTab",
     "tabs",
-    "http://www.spigotmc.org/members/*"
-  ]
+    "http://www.spigotmc.org/members/*",
+    "http://albionco.de/blacklist/*"
+  ],
+  "externally_connectable": {
+    "matches": [
+      "http://albionco.de/blacklist/*"
+    ]
+  }
 }
