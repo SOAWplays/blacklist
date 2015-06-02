@@ -16,6 +16,18 @@ class Plugin extends Ardent {
 	 */
 	protected $table = 'plugins';
 	
+	public function getIdAttribute() {
+		return intval($this->attributes['id']);
+	}
+	
+	public function setIdAttribute($val) {
+		if(is_int($val)) {
+			$this->attributes['id']	= $val;
+		} else {
+			$this->attributes['id'] = intval($val);
+		}
+	}
+	
 	public function getReasonsAttribute() {
 		return json_decode($this->attributes['reasons']);
 	}
@@ -29,9 +41,10 @@ class Plugin extends Ardent {
 	}
 	
 	public function setActiveAttribute($val) {
-		if($val == true) 
+		if($val == true) {
 			$this->attributes['active'] = 1;
-		else 
+		} else { 
 			$this->attributes['active'] = 0;
+		}
 	}
 }

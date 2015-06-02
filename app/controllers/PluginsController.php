@@ -20,14 +20,15 @@ class PluginsController extends \BaseController {
 				'show'
 			)	
 		));
+		
+		
 		/*
 		$this->beforeFilter('csrf', array(
 			'except' => array(
 				'index',
 				'show'
 			)
-		));
-		*/
+		));*/
 	}
 
 	/**
@@ -39,6 +40,12 @@ class PluginsController extends \BaseController {
 	public function index()
 	{
 		$data = Plugin::paginate(15);
+		if(Input::has('limit')) {
+			$limit = Input::get('limit');
+			if(is_numeric($limit)) {
+				$data = Plugin::paginate(intval($limit));
+			}
+		}
 		return Blacklist::json($data);
 	}
 	
