@@ -8,17 +8,16 @@
 
 @section('content')
 <h2>Plugins</h2>
-<p class="text-muted">There <% plugins.length == 1 ? 'is' : 'are' %> <strong><% total %></strong> <% plugins.length == 1 ? 'plugin' : 'plugins' %> stored in our database!</p>
-
+<p class="text-muted">There <% plugins.length == 1 ? 'is' : 'are' %> <strong plugin-counter><% total %></strong> <% plugins.length == 1 ? 'plugin' : 'plugins' %> stored in our database!</p>
 <table class="table table-bordered table-striped">
     <tr>
         <th>Plugin</th>
         <th>Status</th>
         <th>Violations</th>
     </tr>
-    <tr ng-repeat="plugin in plugins">
+    <tr ng-repeat="plugin in plugins" class="plugin">
         <td><a ng-href="<% plugin.url %>"><% plugin.name %></a></td>
-        <td><% plugin.active ? 'Active' : 'Deleted' %></td>
+        <td><% plugin.active == '1' ? 'Active' : 'Deleted' %></td>
         <td>
             <ul>
                <li ng-repeat="reason in plugin.reasons"><% reason %></li> 

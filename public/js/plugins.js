@@ -24,24 +24,34 @@ pluginApp.factory('Plugins', function($http) {
     }
 });
 
-pluginApp.controller('pluginManager', function($scope, $http, Plugins, $timeout) {
+pluginApp.controller('pluginManager', function($scope, $http, Plugins, $timeout, $interval) {
     $scope.loading = false;
     $scope.error = false;
     $scope.plugins = [];
     $scope.total = 0;
     
-    var promise = Plugins.get();
-    promise.success(function(data) {
+    $scope.getPlugins = function() {
+        $scope.loading = true;
         
-        $timeout(function() {
-            $scope.plugins = data.data;
-            $scope.total = data.total;
-			$scope.loading = false;
-		}, 850);
-    });
+        var promise = Plugins.get();
+        promise.success(function(data) {
+            $timeout(function() {
+                $scope.plugins = data.data;
+                $scope.total = data.total;
+    			$scope.loading = false;
+    		}, 1500);
+        });
+        
+        promise.error(function() {
+            $scope.loading = false;
+            $scope.error = true;
+        });
+    };
     
-    promise.error(function() {
-        $scope.loading = false;
-        $scope.error = true;
-    });
+    /*
+    $interval(function() {
+        $scope.getPlugins();
+    }.bind(this), 10000);
+    */
+    $scope.getPlugins();
 });

@@ -13,12 +13,21 @@ class PluginsController extends \BaseController {
 			}
 		});
 		
+		
+		$this->beforeFilter('json', array(
+			'except' => array(
+				'index',
+				'show'
+			)	
+		));
+		/*
 		$this->beforeFilter('csrf', array(
 			'except' => array(
 				'index',
 				'show'
 			)
 		));
+		*/
 	}
 
 	/**
@@ -56,7 +65,11 @@ class PluginsController extends \BaseController {
 		$plugin = new Plugin;
 		$plugin->url = Input::get('url');
 		$plugin->name = Input::get('name');
-		$plugin->reason = Input::get('reason');
+		$plugin->reasons = Input::get('reasons');
+		
+		if(Input::has('active')) {
+			$plugin->active = Input::get('active') == 'true' ? true : false;
+		}
 		
 		if(!$plugin->save()) {
 			return Blacklist::json(array(
@@ -66,6 +79,7 @@ class PluginsController extends \BaseController {
 		}
 		return Blacklist::json(array(
 			'message'	=> 'Plugin was created!',
+			'link'		=> URL::route('api.plugins.show', array($plugin->id)),
 			'plugin'	=> $plugin
 		));
 	}
@@ -82,19 +96,36 @@ class PluginsController extends \BaseController {
 		$plugin = Plugin::findOrFail($id);
 		
 		if(Input::has('name')) {
-			$plugin->name = Input::get('name');
+			if($plugin->name != Input::get('name')) {
+				$plugin->name = Input::get('name');
+			}
 		}
 		
 		if(Input::has('active')) {
-			$plugin->active = Input::get('active') == 'true' ? true : false;
+			$value = Input::get('active') == 'true' ? true : false;
+			if($plugin->active != $value) {
+				$plugin->active = $value;
+			}
 		}
 		
-		if(Input::has('reason')) {
-			$plugin->reason = Input::get('reason');
+		if(Input::has('reasons')) {
+			if($plugin->reasons != Input::get('reasons', array())) {
+				$plugin->reasons = Input::get('reasons', array());
+			}
 		}
 		
 		if(Input::has('url')) {
-			$plugin->url = Input::get('url');
+			if($plugin->url != Input::get('url')) {
+				$plugin->url = Input::get('url');
+			}
+		}
+		
+		if(!$plugin->isDirty()) {
+			return Blacklist::json(array(
+				'message'	=> 'No changes made!',
+				'link'		=> URL::route('api.plugins.show', array($plugin->id)),
+				'plugin'	=> $plugin
+			));
 		}
 	
 		if(!$plugin->save()) {
@@ -106,6 +137,7 @@ class PluginsController extends \BaseController {
 		
 		return Blacklist::json(array(
 			'message' 	=> 'Plugin was updated!',
+			'link'		=> URL::route('api.plugins.show', array($plugin->id)),
 			'plugin'	=> $plugin
 		));
 	}

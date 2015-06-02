@@ -98,3 +98,10 @@ Route::filter('csrf', function()
         throw new Illuminate\Session\TokenMismatchException;
 	}
 });
+
+Route::filter('json', function() {
+	$value = Request::header('Content-Type');
+	if($value != 'application/json') {
+		throw new Exception('Not JSON');
+	}	
+});

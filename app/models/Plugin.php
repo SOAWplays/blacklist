@@ -23,4 +23,15 @@ class Plugin extends Ardent {
 	public function setReasonsAttribute(Array $val) {
 		$this->attributes['reasons'] = json_encode($val);
 	}
+	
+	public function getActiveAttribute() {
+		return $this->attributes['active'] == 1;
+	}
+	
+	public function setActiveAttribute($val) {
+		if($val == true) 
+			$this->attributes['active'] = 1;
+		else 
+			$this->attributes['active'] = 0;
+	}
 }
