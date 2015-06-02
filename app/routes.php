@@ -18,17 +18,21 @@ Route::get('/', array('as' => 'home', function()
 
 Route::get('/users', array('as' => 'users', function()
 {
-	return View::make('users');
+	return View::make('pages.users');
 }));
 
 Route::get('/plugins', array('as' => 'plugins', function()
 {
-	return View::make('plugins');
+	return View::make('pages.plugins');
 }));
+
+Route::controller('/user', 'UserController');
 
 Route::group(array('prefix' => 'api'), function() {
     Route::get('/', function() {
-        return 'Hello World';    
+        return Blacklist::json(array(
+            'message'   => 'API documentation coming soon!'
+        )); 
     });
     
     Route::resource('plugins', 'PluginsController');

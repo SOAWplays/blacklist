@@ -9,11 +9,13 @@ use Illuminate\Auth\Reminders\RemindableInterface;
 class User extends Ardent implements UserInterface, RemindableInterface {
 	
 	public static $rules = array(
-		'username'              => 'required|alpha_dash|between:4,16|unique:users',
+		'name'              	=> 'required|alpha_dash|between:4,16|unique:users',
 		'email'                 => 'required|email|unique:users',
 		'password'              => 'required|alpha_dash|between:8,32|confirmed',
 		'password_confirmation' => 'required|alpha_dash|between:8,32',
 	);
+	
+	public $autoPurgeRedundantAttributes = true;
 
 	use UserTrait, RemindableTrait;
 

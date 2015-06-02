@@ -89,8 +89,8 @@ Route::filter('guest', function()
 
 Route::filter('csrf', function()
 {
-	$token = Input::get('_token');
-	if(Request::ajax()) {
+	$token = Input::get('_token', '');
+	if(Request::ajax() && $token == '') {
 		$token = Request::header('X-CSRF-Token');
 	}
 	
@@ -100,8 +100,7 @@ Route::filter('csrf', function()
 });
 
 Route::filter('json', function() {
-	$value = Request::header('Content-Type');
-	if($value != 'application/json') {
+	if(!Request::isJson()) {
 		throw new Exception('Not JSON');
 	}	
 });

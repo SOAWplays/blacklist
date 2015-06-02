@@ -2,6 +2,8 @@
 
 return array(
 
+	'captcha' => '6LczwwcTAAAAADHlygbsiBYRfk42f3gGsrKSrnze',
+
 	/*
 	|--------------------------------------------------------------------------
 	| Application Debug Mode

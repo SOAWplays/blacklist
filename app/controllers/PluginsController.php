@@ -1,18 +1,9 @@
 <?php
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-
-class PluginsController extends \BaseController {
+class PluginsController extends APIController {
 	
 	function __construct() {
-		App::error(function(ModelNotFoundException $e) {
-			if($e->getModel() == 'Plugin') {
-				return Blacklist::json(array(
-					'message'	=> 'Invalid plugin ID',
-				), 404);
-			}
-		});
-		
+		parent::__construct('Plugin', 'Invalid plugin ID');
 		
 		$this->beforeFilter('json', array(
 			'except' => array(
@@ -20,7 +11,6 @@ class PluginsController extends \BaseController {
 				'show'
 			)	
 		));
-		
 		
 		/*
 		$this->beforeFilter('csrf', array(
