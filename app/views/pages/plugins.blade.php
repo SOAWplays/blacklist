@@ -7,7 +7,7 @@
 @stop
 
 @section('content')
-<div class="alert alert-danger" ng-show="nextPageEmpty">
+<div class="alert alert-danger" ng-show="pageEmpty">
     <strong>Sorry!</strong> invalid page number provided!
 </div>
 
@@ -29,7 +29,7 @@
         </td>
     </tr>
 </table>
-<nav class="text-center">
+<nav class="text-center" ng-hide="pages.length <= 1">
     <ul class="pagination">
         <li ng-class="(page - 1 == 0) ? 'disabled' : ''" ng-click="page - 1 == 0 || goto(page - 1)">
             <a href="#" aria-label="Previous">

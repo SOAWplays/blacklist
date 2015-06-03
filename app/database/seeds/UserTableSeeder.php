@@ -8,14 +8,12 @@ class UserTableSeeder extends Seeder {
 		$user->name = 'admin';
 		$user->email = 'admin@change.me';
 		$user->password = 'admin123';
-		$user->password_confirmation = $user->password;
+		$user->password_confirmation = $user->password; 
+		$user->admin = true;
 		
 		if(!$user->save()) {
 			print_r($user->errors()->all());
-			return;
 		}
-		
-		print 'Success' . PHP_EOL;
 	}
 
 }

@@ -31,13 +31,17 @@ class User extends Ardent implements UserInterface, RemindableInterface {
 	 *
 	 * @var array
 	 */
-	protected $hidden = array('password', 'remember_token');
+	protected $hidden = array('password', 'remember_token', 'admin');
 
 	public function beforeSave() {
-		if($this->isDirty('password')) {
-		  $this->password = Hash::make($this->password);
+		if(Hash::needsRehash($this->password) || $this->isDirty('password')) {
+			$this->password = Hash::make($this->password);
 		}
 		
 		return true;
+	}
+	
+	public function getAdminAttribute() {
+		return $this->attributes['admin'] == true;
 	}
 }

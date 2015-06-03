@@ -16,17 +16,18 @@ Route::get('/', array('as' => 'home', function()
 	return View::make('index');
 }));
 
-Route::get('/users', array('as' => 'users', function()
+Route::get('/list/users', array('as' => 'users', function()
 {
 	return View::make('pages.users');
 }));
 
-Route::get('/plugins', array('as' => 'plugins', function()
+Route::get('/list/plugins', array('as' => 'plugins', function()
 {
 	return View::make('pages.plugins');
 }));
 
-Route::controller('/user', 'UserController');
+Route::resource('/user', 'PanelController');
+Route::controller('/auth', 'AuthController');
 
 Route::group(array('prefix' => 'api'), function() {
     Route::get('/', function() {
@@ -35,5 +36,6 @@ Route::group(array('prefix' => 'api'), function() {
         )); 
     });
     
-    Route::resource('plugins', 'PluginsController');
+    Route::controller('users', 'UserController');
+    Route::resource('plugins', 'PluginController');
 });

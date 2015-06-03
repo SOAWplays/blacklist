@@ -1,141 +1,47 @@
-<?php
+<?php 
+
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class UserController extends BaseController {
     
-    public function getIndex() {
-        if(Auth::check()) {
-            return Redirect::route('home');
-        }
-        return Redirect::action('UserController@getLogin');
+    public function __construct() {
+        App::error(function(ModelNotFoundException $e) {
+			if($e->getModel() == 'Plugin') {
+				return Blacklist::json(array(
+					'message'	=> 'Invalid plugin identifier',
+				), 404);
+			}
+		});
     }
-    
-    public function getUsers() {
-        return Blacklist::json(User::paginate(15));
-    }
-    
-    public function getLogout() {
-        if(Auth::check()) {
-            Auth::logout();
-        }
-        return Redirect::route('home');
-    }
-    
-    public function getLogin() {
-        if(Auth::check()) {
-            return Redirect::route('home');
-        }
-        return View::make('auth.login');
-    }
-    
-    public function getRegister() {
-        if(Auth::check()) {
-            return Redirect::route('home');
-        }
-        return View::make('auth.register');
-    }
-    
-    public function postLogin() {
-        $missing = array();
-        
-        if(!Input::has('email')) {
-            array_push($missing, 'email');    
-        }
-        
-        if(!Input::has('password')) {
-            array_push($missing, 'password');    
-        }
-        
-        if(!empty($missing)) {
-            return Blacklist::json(array(
-                'message'   => 'Missing required fields',
-                'fields'    => $missing
-            ), 400);
-        }
-        
-        $remember = false;
-        if(Input::has('remember')) {
-            $remember = Input::get('remember') == true ? true : false;    
-        }
-        
-        $data = array(
-            'email'     => Input::get('email'),
-            'password'  => Input::get('password')  
-        );
-        
-        if(Auth::attempt($data, $remember)) {
-            return Blacklist::json(array(
-                'message'   => 'Login successful!',
-                'redirect'  => URL::route('home'),
-            ));
-        }
-        
-        return Blacklist::json(array(
-            'message'   => 'Login failed, incorrect email or password',
-        ), 400);
-    }
-    
-    public function postRegister() {
-        if(!Input::has('captcha')) {
-            return Blacklist::json(array(
-                'message'   => 'Invalid captcha provided!'
-            ), 400);
-        }
-        
-        $captcha = new \ReCaptcha\ReCaptcha(Config::get('app.captcha', ''));
-        if($captcha == '') {
-            return Blacklist::json(array(
-                'message'   => 'Captcha not set by site administrator!'
-            ), 500);
-        }
-        
-        $response = $captcha->verify(Input::get('captcha'), Request::getClientIp());
-        if(!$response->isSuccess()) {
-            return Blacklist::json(array(
-                'message'   => 'You failed the captcha!'
-            ), 400);
-        }
-        
-        $missing = array();
-        if(!Input::has('name')) {
-            array_push($missing, 'name');
-        }
-        
-        if(!Input::has('email')) {
-            array_push($missing, 'email');    
-        }
-        
-        if(!Input::has('password')) {
-            array_push($missing, 'password');    
-        }
-        
-        if(!Input::has('confirm')) {
-            array_push($missing, 'confirm');    
-        }
-        
-        if(!empty($missing)) {
-            return Blacklist::json(array(
-                'message'   => 'Missing required fields',
-                'fields'    => $missing
-            ), 400);
-        }
-        
-        $user = new User;
-        $user->name = Input::get('name');
-        $user->email = Input::get('email');
-        $user->password = Input::get('password');
-        $user->password_confirmation = Input::get('confirm');
 
-        if(!$user->save()) {
+    public function getIndex() {
+        return Blacklist::json(
+            Profile::paginate(50)
+        );
+    }
+    
+    public function getProfile($type = '', $id = -1) {
+        if(empty($type) || !in_array($type, Blacklist::profiles())) {
             return Blacklist::json(array(
-                'message'   => 'Registration failed!',
-                'failed'    => $user->errors()->all()
-            ), 400);
+                'message'   => "Invalid profile type \"$type\"",
+                'valid'     => Blacklist::profiles()
+            ), 400);    
         }
         
-        Auth::login($user);
-        return Blacklist::json(array(
-            'message'   => 'Registration successful!',
-            'redirect'  => URL::to('home'),
-        ));
+        if($id == -1 || empty($id) || empty($type)) { 
+            throw with(new ModelNotFoundException)->setModel('Profile'); 
+        }
+        
+        $type = strtolower($type);
+        $profile = Profile::where('type', '=', $type);
+        if(is_numeric($id)) {
+            $profile = $profile->where('report_id', '=', $id)->first();
+        } else {
+            $profile = $profile->where('name', '=', $id)->first();
+        }
+        
+        if($profile == null) throw with(new ModelNotFoundException)->setModel('Profile');
+        return Blacklist::json($profile);
     }
+    
 }

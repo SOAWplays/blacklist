@@ -36,12 +36,7 @@ class UpdatePluginsTable extends Migration {
 	{
 		Schema::table('plugins', function(Blueprint $table)
 		{
-			if(Schema::hasColumn('plugins', 'active')) {
-				$table->dropColumn('active');
-			}
-			if(Schema::hasColumn('plugins', 'reason')) {
-				$table->dropColumn('reason');
-			}
+			$table->dropColumn(array('active', 'reasons'));
 		});
 	}
 

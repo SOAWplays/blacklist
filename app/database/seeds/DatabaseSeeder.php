@@ -10,8 +10,21 @@ class DatabaseSeeder extends Seeder {
 	public function run()
 	{
 		Eloquent::unguard();
-		$this->call('PluginTableSeeder');
-		$this->call('UserTableSeeder');
+		
+		print 'Working from: ' . __DIR__ . PHP_EOL;
+		
+		$files = scandir(__DIR__);
+		foreach($files as $file) {
+			$fileName = basename($file, '.' . pathinfo($file)['extension']);
+			if($fileName == 'DatabaseSeeder') continue;
+			if($this->endsWith($file, '.php')) {
+				$this->call($fileName);
+			}		
+		}
+	}
+	
+	private function endsWith($haystack, $needle) {
+    	return $needle === "" || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos($haystack, $needle, $temp) !== FALSE);
 	}
 
 }

@@ -28,9 +28,9 @@
                         <li role="presentation" @if(Route::currentRouteName() == 'users')class="active"@endif><a href="{{ URL::route('users') }}">Users</a></li>
                         <li role="presentation" @if(Route::currentRouteName() == 'plugins')class="active"@endif><a href="{{ URL::route('plugins') }}">Plugins</a></li>
                         @if(Auth::check())
-                        <li role="presentation" @if(Request::path() == 'user/admin')class="active" @endif><a href="{{ URL::action('UserController@getLogout') }}">Logout</a></li>
+                        <li role="presentation" @if(Request::path() == 'user/admin')class="active" @endif><a href="{{ URL::action('AuthController@getLogout') }}">Logout</a></li>
                         @else
-                        <li role="presentation" @if(Request::path() == 'user/login')class="active" @endif><a href="{{ URL::action('UserController@getLogin') }}">Login</a></li>
+                        <li role="presentation" @if(Request::path() == 'user/login')class="active" @endif><a href="{{ URL::action('AuthController@getLogin') }}">Login</a></li>
                         @endif
                     </ul>
                 </nav>

@@ -61,7 +61,7 @@ form .form-control:focus {
     margin-top: 10px;
 }
 
-@media screen and (max-device-width: 640px) {
+@media screen and (max-width: 640px) {
     form h2 {
         margin-top: 12px;
     }

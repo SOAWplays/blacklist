@@ -1,9 +1,20 @@
-var loginApp = angular.module('loginApp', [], function($interpolateProvider) {
+var authApp = angular.module('authApp', [], function($interpolateProvider) {
     $interpolateProvider.startSymbol('<%');
     $interpolateProvider.endSymbol('%>');
-});
+});  
 
-loginApp.factory('Login', function($http) {
+var captcha = true;
+try {
+    angular.module('vcRecaptcha');
+    authApp = angular.module('authApp', ['vcRecaptcha'], function($interpolateProvider) {
+        $interpolateProvider.startSymbol('<%');
+        $interpolateProvider.endSymbol('%>');
+    });
+} catch (err) {    
+    captcha = false;
+}
+
+authApp.factory('Authenticator', function($http) {
     return {
         postForm : function(form) {
             return $http({
@@ -18,13 +29,14 @@ loginApp.factory('Login', function($http) {
     }    
 });
 
-loginApp.filter('safe', ['$sce', function($sce) {
+authApp.filter('safe', ['$sce', function($sce) {
   return function(html){
     return $sce.trustAsHtml(html);
   }
 }]);
 
-loginApp.controller('loginManager', function($scope, $timeout, $interval, Login) {
+authApp.controller('authManager', function($scope, $timeout, $interval, Authenticator) {
+    $scope.reloading = false;
     $scope.loading = false;
     $scope.alert = {
         style: 'success',
@@ -37,32 +49,45 @@ loginApp.controller('loginManager', function($scope, $timeout, $interval, Login)
         $scope.auth._token = token;
         $scope.loading = true;
         
-        var promise = Login.postForm($scope.auth);
+        var promise = Authenticator.postForm($scope.auth);
         promise.success(function(data) {
             $scope.alert.content = data.message;
             $scope.showAlert({
                 redirect: data.redirect,
                 success: true
-            }, 2500);
+            }, 3500);
         });
         
         promise.error(function(data) {
-            $scope.alert.content = data.message;
-            if(data.failed) {
-                var html = '<ul>';
-                data.failed.forEach(function(el) {
+            console.log(data);
+            if(data.fields) {
+                var html = data.message += '<ul>';
+                data.fields.forEach(function(el) {
+                    if(el == 'confirm') {
+                        html += '<li>password confirmation</li>';
+                        return;
+                    }
                     html += '<li>' + el + '</li>';
                 });
                 html += '</ul>';
                 $scope.alert.content = html;
+            } else {
+                $scope.alert.content = data.message;
             }
+            
             $scope.showAlert({
-                success: false 
-            }, 2500);
+                success: false
+            }, 6750);
         })
         
-        promise.finally(function() {            $scope.loading = false;
+        promise.finally(function() {            
+            $scope.loading = false;
         })
+    };
+    
+    $scope.captcha = function(response) {
+        $scope.reloading = false;
+        $scope.auth.captcha = response;
     };
     
     $scope.showAlert = function(content, duration) {
@@ -80,9 +105,17 @@ loginApp.controller('loginManager', function($scope, $timeout, $interval, Login)
                     location.href = redirect;
                     return;
                 }
-                $scope.alert.content = 'Login successful, redirecting in <strong>' + (duration - passed) / 1000 + '</strong> seconds';
+                $scope.alert.content = 'Redirecting in <strong>' + (duration - passed) / 1000 + '</strong> seconds';
                 passed = passed + 100;
             }.bind(this), 100);
+        } 
+        
+        if (!content.success && captcha == true) {
+            $scope.reloading = true;
+            $timeout(function() {
+                angular.injector(['ng', 'authApp']).get('vcRecaptchaService').reload();
+                $scope.reloading = false;
+            }, 1500);
         }
         
         $timeout(function() {

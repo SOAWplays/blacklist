@@ -29,7 +29,7 @@ pluginApp.factory('Plugins', function($http) {
 });
 
 pluginApp.controller('pluginManager', function($scope, $http, Plugins, $timeout, $interval) {
-    $scope.nextPageEmpty = false;
+    $scope.pageEmpty = false;
     $scope.loading = false;
     $scope.error = false;
     $scope.plugins = [];
@@ -45,10 +45,10 @@ pluginApp.controller('pluginManager', function($scope, $http, Plugins, $timeout,
             $timeout(function() {
                 if(data.data.length == 0) {
                     $timeout(function() {
-                        $scope.nextPageEmpty = false;
+                        $scope.pageEmpty = false;
                     }, 5000);
                     
-                    $scope.nextPageEmpty = true;
+                    $scope.pageEmpty = true;
                     $scope.page = $scope.oldPage;
                     return;    
                 }

@@ -7,10 +7,12 @@ class PluginTableSeeder extends Seeder {
 		$plugin = new Plugin;
 		$plugin->name = 'TestPluginPro';
 		$plugin->url = 'http://google.com/';
-		$plugin->reasons = ['Lorem ipsum, yeah, it works.'];
+		$plugin->reasons = array(
+			'Lorem ipsum', 
+			'foo bar baz'
+		);
 		
 		if(!$plugin->save()) {
-			echo 'Unable to save plugin';
 			print_r($plugin->errors()->all());
 		}
 	}

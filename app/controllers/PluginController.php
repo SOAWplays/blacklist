@@ -1,9 +1,17 @@
 <?php
 
-class PluginsController extends APIController {
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+
+class PluginController extends BaseController {
 	
-	function __construct() {
-		parent::__construct('Plugin', 'Invalid plugin ID');
+	public function __construct() {
+        App::error(function(ModelNotFoundException $e) {
+			if($e->getModel() == 'Plugin') {
+				return Blacklist::json(array(
+					'message'	=> 'Invalid plugin identifier',
+				), 404);
+			}
+		});
 		
 		$this->beforeFilter('json', array(
 			'except' => array(
@@ -12,13 +20,12 @@ class PluginsController extends APIController {
 			)	
 		));
 		
-		/*
 		$this->beforeFilter('csrf', array(
 			'except' => array(
 				'index',
 				'show'
 			)
-		));*/
+		));
 	}
 
 	/**
