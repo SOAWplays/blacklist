@@ -9,8 +9,7 @@ Check out our [Chrome extension][cr-ext], it's still in the early stages but we'
 Please review our contribution guidelines below before contributing. Failure to conform to our guidelines will result in your submissions being deleted.
 
 ## Collaborators
-The usernames below have all been granted read and write access to [this](https://github.com/Fireflies/blacklist) repository as they are viewed as trusted, this list is subject to change.
-
+As requested by a member of the MCMarket community I have compiled a list of the GitHub users who I view as trusted. Each user on this list has read and write access to [this](https://github.com/Fireflies/blacklist) repository.
 - [DarkSeraphim](https://github.com/DarkSeraphim)
 - [samczsun](https://github.com/samczsun)
 - [SpongyBacon](https://github.com/SpongyBacon)
